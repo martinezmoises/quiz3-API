@@ -54,7 +54,7 @@ func (u UserModel) Get(id int64) (*User, error) {
 
 	query := `
 		SELECT id, created_at, email, full_name, version
-		FROM useJrs
+		FROM users
 		WHERE id = $1
 	`
 	var user User
