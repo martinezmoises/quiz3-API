@@ -13,6 +13,7 @@ import (
 
 var ErrUserNotFound = errors.New("user not found")
 
+// Changing the struct fields to work with the task of users
 type User struct {
 	ID        int64     `json:"id"`
 	Email     string    `json:"email"`
@@ -25,11 +26,13 @@ type UserModel struct {
 	DB *sql.DB
 }
 
+// Validation logic for email and fullname
 func ValidateUser(v *validator.Validator, user *User) {
 	v.Check(user.Email != "", "email", "must be provided")
 	v.Check(user.FullName != "", "full_name", "must be provided")
 }
 
+// Inserting/Creating a user
 func (u UserModel) Insert(user *User) error {
 	query := `
 		INSERT INTO users (email, full_name)
@@ -43,6 +46,7 @@ func (u UserModel) Insert(user *User) error {
 	return u.DB.QueryRowContext(ctx, query, args...).Scan(&user.ID, &user.CreatedAt, &user.Version)
 }
 
+// Reading/Getting the user created
 func (u UserModel) Get(id int64) (*User, error) {
 	if id < 1 {
 		return nil, ErrUserNotFound
@@ -50,7 +54,7 @@ func (u UserModel) Get(id int64) (*User, error) {
 
 	query := `
 		SELECT id, created_at, email, full_name, version
-		FROM users
+		FROM useJrs
 		WHERE id = $1
 	`
 	var user User
@@ -67,6 +71,7 @@ func (u UserModel) Get(id int64) (*User, error) {
 	return &user, nil
 }
 
+// Updating/Fetching a user
 func (u UserModel) Update(user *User) error {
 	query := `
 		UPDATE users
@@ -81,6 +86,7 @@ func (u UserModel) Update(user *User) error {
 	return u.DB.QueryRowContext(ctx, query, args...).Scan(&user.Version)
 }
 
+// Deleting a user
 func (u UserModel) Delete(id int64) error {
 	query := `
 		DELETE FROM users

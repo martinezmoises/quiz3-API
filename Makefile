@@ -1,14 +1,14 @@
 ## run: run the cmd/api application
 
-.PHONY : run/api
-run/api:
+.PHONY : run
+run:
 	@echo 'Running application...'
 	@go run ./cmd/api -port=4040 -env=development -db-dsn=postgres://users:fishsticks@localhost/users
 
 ## db/psql: connect to the database using psql (terminal)
 .PHONY: db/psql
 db/psql:
-	psql ${COMMENTS_DB_DSN}
+	psql postgres://users:fishsticks@localhost/users
 
 ## db/migrations/new name=$1: create a new database migration
 .PHONY: db/migrations/new
